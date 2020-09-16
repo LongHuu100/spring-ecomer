@@ -36,7 +36,8 @@
 	              			<table id="example2" class="table table-bordered table-hover dataTable dtr-inline" role="grid" aria-describedby="example2_info">
 				                <thead>
 				                	<tr role="row">
-				                		<th class="sorting_asc" rowspan="1" colspan="1" >Tên danh mục</th>
+				                		<th class="sorting_asc" rowspan="1" colspan="1" >Tên sản phẩm</th>
+				                		<th class="sorting" rowspan="1" colspan="1">Danh mục</th>
 				                		<th class="sorting" rowspan="1" colspan="1">Tiêu đề</th>
 				                		<th class="sorting" rowspan="1" colspan="1">Mô tả</th>
 				                		<th class="sorting" rowspan="1" colspan="1">Ngày tạo</th>
@@ -50,6 +51,7 @@
 							        </tr>
 					                <tr th:each="product : ${listProduct}" role="row" class="odd">
 						                  <td th:text="${product.name}"></td>
+						                  <td th:text="${product.lableCategory()}"></td>
 						                  <td th:text="${product.title}"></td>
 						                  <td th:text="${product.desc}"></td>
 						                  <td th:text="${product.createTime}"></td>

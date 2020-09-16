@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.t3h.services.CategoryService;
 
 @Table(name = "product")
 @Entity
@@ -73,6 +75,18 @@ public class Product implements Serializable {
 	
 	public String statusLable() {
 		return mapStatus().get(status);
+	}
+	
+	public String lableCategory() {
+		var listCategory = CategoryService.getIntance().categoryWithIndent();
+		try {
+			Category category = listCategory.stream().filter(item -> {
+				return categoryId.equals(item.getId());
+			}).findAny().get();
+			return Optional.ofNullable(category.getName()).orElse("--");
+		} catch (Exception e) {
+			return "--";
+		}
 	}
 	
 	public Map<Integer, String> mapStatus() {

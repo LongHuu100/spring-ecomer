@@ -3,6 +3,8 @@ package vn.t3h.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,17 @@ public class CategoryService {
 	
 	@Autowired
 	private CategoryDao categoryDao;
+	
+	private static CategoryService intance;
+	
+	@PostConstruct
+	public void initProduct() {
+		intance = this;
+	}
+	
+	public static CategoryService getIntance() {
+		return intance;
+	}
 	
 	public List<Category> getAllCategory() {
 		return categoryDao.allCategory();

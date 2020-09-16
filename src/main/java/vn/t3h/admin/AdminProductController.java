@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import vn.t3h.aop.BaseUploads;
 import vn.t3h.controller.BaseController;
 import vn.t3h.dao.CategoryDao;
 import vn.t3h.dao.ProductDao;
@@ -50,6 +52,15 @@ public class AdminProductController extends BaseController {
 			model.addAttribute("product", product);
 			model.addAttribute("listCategory", categoryService.categoryWithIndent());
 			return "admin/product/form";
+		}
+		if(product.multipartFile != null) {
+			product.multipartFile.forEach(multipart -> {
+				try {
+					BaseUploads.uploadSignFile(multipart, product);
+				} catch (Exception e) {
+					
+				}
+			});
 		}
 		productDao.create(product);
 		return "redirect:/admin/product";

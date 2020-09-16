@@ -3,7 +3,9 @@ package vn.t3h.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,10 +15,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -24,13 +28,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.t3h.data.UploadsFiles;
 import vn.t3h.services.CategoryService;
 
 @Table(name = "product")
 @Entity
 @NoArgsConstructor @AllArgsConstructor
 @Setter @Getter
-public class Product implements Serializable {
+public class Product implements UploadsFiles, Serializable {
 
 	private static final long serialVersionUID = 4641853311314844969L;
 	public static Integer STATUS_ACTICE = 1;
@@ -94,5 +99,21 @@ public class Product implements Serializable {
 		maps.put(STATUS_ACTICE, "Kích hoạt");
 		maps.put(STATUS_DEACTICE, "Ngưng");
 		return maps;
+	}
+	
+	@Transient
+	// Khai báo đây không phải là cột trong db, để spring không mapping với model.
+	public List<MultipartFile> multipartFile;
+
+	public static String UPLOAD_PATH =  "/uploads/product/";
+	
+	@Override
+	public String folderUpload() {
+  		return UPLOAD_PATH;
+	}
+
+	@Override
+	public List<String> filePass() {
+		return Arrays.asList("png", "jpg");
 	}
 }

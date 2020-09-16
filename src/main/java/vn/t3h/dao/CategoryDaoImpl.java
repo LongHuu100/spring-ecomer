@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import vn.t3h.model.Category;
 import vn.t3h.services.CategoryService;
 
 @Repository("categoryDao")
+@Transactional
 public class CategoryDaoImpl implements CategoryDao {
 
 	@PersistenceContext

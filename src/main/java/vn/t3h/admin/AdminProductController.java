@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import vn.t3h.controller.BaseController;
 import vn.t3h.dao.CategoryDao;
+import vn.t3h.dao.ProductDao;
 import vn.t3h.model.Category;
+import vn.t3h.model.Product;
 import vn.t3h.services.CategoryService;
 import vn.t3h.services.ProductService;
 
@@ -25,7 +27,7 @@ public class AdminProductController extends BaseController {
 	
 	@Autowired ProductService productService;
 	@Autowired CategoryService categoryService;
-	@Autowired CategoryDao categoryDao;
+	@Autowired ProductDao productDao;
 	
 	@GetMapping(value = {"", "/"})
 	public String getProducts(Model model) {
@@ -34,58 +36,58 @@ public class AdminProductController extends BaseController {
 	}
 	
 	@GetMapping(value = "/create")
-	public String createCategory(Model model) {
-		model.addAttribute("category", new Category());
+	public String createProduct(Model model) {
+		model.addAttribute("product", new Product());
 		model.addAttribute("listCategory", categoryService.categoryWithIndent());
-		return "admin/category/form";
+		return "admin/product/form";
 	}
 	
 	@PostMapping(value = "/create")
-	public String categoryForm(@Valid @ModelAttribute(value="category") Category category, 
+	public String productForm(@Valid @ModelAttribute(value="product") Product product, 
 			BindingResult bindingResult,  Model model) {
 		
 		if(bindingResult.hasErrors()) {
-			model.addAttribute("category", category);
+			model.addAttribute("product", product);
 			model.addAttribute("listCategory", categoryService.categoryWithIndent());
-			return "admin/category/form";
+			return "admin/product/form";
 		}
-		categoryDao.create(category);
-		return "redirect:/admin/category";
+		productDao.create(product);
+		return "redirect:/admin/product";
 	}
 	
 	@GetMapping(value = "/update")
-	public String updateCategory(
+	public String updateProduct(
 			@RequestParam Integer id,
 			Model model) {
-		var category = categoryDao.findById(id);
-		if(category == null) {
+		var product = productDao.findById(id);
+		if(product == null) {
 			throw new RuntimeException("Không có record id: " + id);
 		}
-		model.addAttribute("category", category);
+		model.addAttribute("product", product);
 		model.addAttribute("listCategory", categoryService.categoryWithIndent());
-		return "admin/category/form";
+		return "admin/product/form";
 	}
 	
 	@PostMapping(value = "/update")
 	public String categoryFormUpdate(
 			@Valid 
-			@ModelAttribute(value="category") Category category, 
+			@ModelAttribute(value="product") Product product, 
 			BindingResult bindingResult,
 			@RequestParam Integer id,
 			Model model) {
 		
 		if(bindingResult.hasErrors()) {
-			model.addAttribute("category", category);
+			model.addAttribute("product", product);
 			model.addAttribute("listCategory", categoryService.categoryWithIndent());
-			return "admin/category/form";
+			return "admin/product/form";
 		}
-		var cateInDb = categoryDao.findById(id);
-		if(cateInDb == null) {
+		var prodInDb = productDao.findById(id);
+		if(prodInDb == null) {
 			throw new RuntimeException("Không có record id: " + id);
 		}
 		
-		BeanUtils.copyProperties(category, cateInDb, new String[] {"createTime", "icon"});
-		categoryDao.update(cateInDb);
-		return "redirect:/admin/category";
+		BeanUtils.copyProperties(product, prodInDb, new String[] {"createTime", "updateTime"});
+		productDao.update(prodInDb);
+		return "redirect:/admin/product";
 	}
 }
